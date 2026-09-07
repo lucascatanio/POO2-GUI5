@@ -15,12 +15,16 @@ namespace MatchingGame
         {
             jogo.IniciarNovoJogo();
             IniciarTimerDeUI();
+            AtualizarMenuDica();
+
+            MostrarPreviaInicial();
         }
 
         private void newGameToolStripMenuItem_Click(object sender, EventArgs e)
         {
             jogo.IniciarNovoJogo();
             IniciarTimerDeUI();
+            AtualizarMenuDica();
             primeiraCarta = null;
 
             tableLayoutPanel1.Enabled = true;
@@ -29,6 +33,19 @@ namespace MatchingGame
                 var button = (Button)tableLayoutPanel1.Controls[i];
                 button.Visible = true;
             }
+
+            MostrarPreviaInicial();
+        }
+
+        private void usarDicaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!jogo.TentarUsarDica())
+            {
+                return;
+            }
+
+            RevelarCartasTemporariamente();
+            AtualizarMenuDica();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -51,6 +68,12 @@ namespace MatchingGame
             }
 
             System.Threading.Thread.Sleep(1000);
+
+            if (resultado == ResultadoJogada.ParNaoEncontrado)
+            {
+                jogo.EsconderUltimaJogadaSemPar();
+            }
+
             primeiraCarta!.BackgroundImage = null;
             button.BackgroundImage = null;
 
@@ -90,6 +113,44 @@ namespace MatchingGame
             lblTempoTotal.Text = "Tempo total: " + FormatarTempo(jogo.CronometroTotal.TempoDecorrido);
             lblTempoNivel.Text = "Tempo do nível: " + FormatarTempo(jogo.CronometroNivel.TempoDecorrido);
             lblTentativas.Text = "Tentativas: " + jogo.Tentativas;
+        }
+
+        private void AtualizarMenuDica()
+        {
+            usarDicaToolStripMenuItem.Text = "Usar Dica (" + jogo.DicasRestantesNoNivel + ")";
+            usarDicaToolStripMenuItem.Enabled = jogo.DicasRestantesNoNivel > 0;
+        }
+
+        private void RedesenharTabuleiro()
+        {
+            for (var i = 0; i < tableLayoutPanel1.Controls.Count; i++)
+            {
+                var button = (Button)tableLayoutPanel1.Controls[i];
+                int posicao = int.Parse(button.Name.Substring(6)) - 1;
+                Carta carta = jogo.Baralho.Cartas[posicao];
+                button.BackgroundImage = carta.EstaVirada ? carta.Imagem : null;
+            }
+        }
+
+        private void MostrarPreviaInicial()
+        {
+            RevelarCartasTemporariamente();
+        }
+
+        private void RevelarCartasTemporariamente()
+        {
+            tableLayoutPanel1.Enabled = false;
+
+            jogo.RevelarTodas();
+            RedesenharTabuleiro();
+            Refresh();
+
+            System.Threading.Thread.Sleep(3000);
+
+            jogo.EsconderTodas();
+            RedesenharTabuleiro();
+
+            tableLayoutPanel1.Enabled = true;
         }
 
         private static string FormatarTempo(TimeSpan tempo)

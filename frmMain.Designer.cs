@@ -29,6 +29,7 @@
             this.components = new System.ComponentModel.Container();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.newGameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.usarDicaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.painelStatus = new System.Windows.Forms.FlowLayoutPanel();
             this.lblTempoTotal = new System.Windows.Forms.Label();
             this.lblTempoNivel = new System.Windows.Forms.Label();
@@ -85,7 +86,8 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.newGameToolStripMenuItem});
+            this.newGameToolStripMenuItem,
+            this.usarDicaToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(824, 24);
@@ -98,6 +100,13 @@
             this.newGameToolStripMenuItem.Size = new System.Drawing.Size(73, 20);
             this.newGameToolStripMenuItem.Text = "Novo Jogo";
             this.newGameToolStripMenuItem.Click += new System.EventHandler(this.newGameToolStripMenuItem_Click);
+            //
+            // usarDicaToolStripMenuItem
+            //
+            this.usarDicaToolStripMenuItem.Name = "usarDicaToolStripMenuItem";
+            this.usarDicaToolStripMenuItem.Size = new System.Drawing.Size(73, 20);
+            this.usarDicaToolStripMenuItem.Text = "Usar Dica";
+            this.usarDicaToolStripMenuItem.Click += new System.EventHandler(this.usarDicaToolStripMenuItem_Click);
             //
             // painelStatus
             //
@@ -786,6 +795,7 @@
 
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem newGameToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem usarDicaToolStripMenuItem;
         private System.Windows.Forms.FlowLayoutPanel painelStatus;
         private System.Windows.Forms.Label lblTempoTotal;
         private System.Windows.Forms.Label lblTempoNivel;

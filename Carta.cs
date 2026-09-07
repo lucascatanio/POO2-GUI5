@@ -18,9 +18,14 @@ namespace MatchingGame
             Imagem = imagem;
         }
 
-        public void Virar()
+        public void Mostrar()
         {
-            EstaVirada = !EstaVirada;
+            EstaVirada = true;
+        }
+
+        public void Esconder()
+        {
+            EstaVirada = false;
         }
 
         public void Combinar()

@@ -14,6 +14,9 @@ namespace MatchingGame
 
         private int primeiraPosicao = -1;
 
+        private int ultimaPosicaoSemParA = -1;
+        private int ultimaPosicaoSemParB = -1;
+
         public Baralho Baralho { get; } = new Baralho();
 
         public Cronometro CronometroTotal { get; } = new Cronometro();
@@ -23,6 +26,8 @@ namespace MatchingGame
         public int Tentativas { get; private set; }
 
         public int ParesEncontrados { get; private set; }
+
+        public int DicasRestantesNoNivel { get; private set; }
 
         public void IniciarNovoJogo()
         {
@@ -43,12 +48,47 @@ namespace MatchingGame
         {
             CronometroNivel.Reiniciar();
             CronometroNivel.Iniciar();
+
+            DicasRestantesNoNivel = 1;
+        }
+
+        public bool TentarUsarDica()
+        {
+            if (DicasRestantesNoNivel <= 0 || primeiraPosicao >= 0)
+            {
+                return false;
+            }
+
+            DicasRestantesNoNivel--;
+            return true;
+        }
+
+        public void RevelarTodas()
+        {
+            foreach (Carta carta in Baralho.Cartas)
+            {
+                if (!carta.EstaCombinada)
+                {
+                    carta.Mostrar();
+                }
+            }
+        }
+
+        public void EsconderTodas()
+        {
+            foreach (Carta carta in Baralho.Cartas)
+            {
+                if (!carta.EstaCombinada)
+                {
+                    carta.Esconder();
+                }
+            }
         }
 
         public ResultadoJogada SelecionarCarta(int posicao)
         {
             Carta carta = Baralho.Cartas[posicao];
-            carta.Virar();
+            carta.Mostrar();
 
             if (primeiraPosicao < 0)
             {
@@ -58,6 +98,7 @@ namespace MatchingGame
             }
 
             Carta primeira = Baralho.Cartas[primeiraPosicao];
+            int posicaoPrimeira = primeiraPosicao;
             primeiraPosicao = -1;
 
             if (primeira.PokemonId == carta.PokemonId)
@@ -76,9 +117,25 @@ namespace MatchingGame
                 return ResultadoJogada.ParEncontrado;
             }
 
-            primeira.Virar();
-            carta.Virar();
+            ultimaPosicaoSemParA = posicaoPrimeira;
+            ultimaPosicaoSemParB = posicao;
             return ResultadoJogada.ParNaoEncontrado;
+        }
+
+        public void EsconderUltimaJogadaSemPar()
+        {
+            if (ultimaPosicaoSemParA >= 0)
+            {
+                Baralho.Cartas[ultimaPosicaoSemParA].Esconder();
+            }
+
+            if (ultimaPosicaoSemParB >= 0)
+            {
+                Baralho.Cartas[ultimaPosicaoSemParB].Esconder();
+            }
+
+            ultimaPosicaoSemParA = -1;
+            ultimaPosicaoSemParB = -1;
         }
     }
 }
