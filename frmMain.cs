@@ -18,8 +18,35 @@ namespace MatchingGame
             {
                 var button = (Button)tableLayoutPanel1.Controls[i];
                 int posicao = int.Parse(button.Name.Substring(6)) - 1;
+                button.TabStop = false;
                 botoesPorPosicao[posicao] = button;
             }
+        }
+
+        private async Task AnimarVirada(Button button, Image? novaImagem)
+        {
+            Padding margemOriginal = button.Margin;
+            int larguraBase = button.Width;
+            int passos = 6;
+            int atrasoPorPasso = 15;
+
+            for (int i = 1; i <= passos; i++)
+            {
+                int extra = (larguraBase / 2) * i / passos;
+                button.Margin = new Padding(margemOriginal.Left + extra, margemOriginal.Top, margemOriginal.Right + extra, margemOriginal.Bottom);
+                await Task.Delay(atrasoPorPasso);
+            }
+
+            button.BackgroundImage = novaImagem;
+
+            for (int i = passos - 1; i >= 0; i--)
+            {
+                int extra = (larguraBase / 2) * i / passos;
+                button.Margin = new Padding(margemOriginal.Left + extra, margemOriginal.Top, margemOriginal.Right + extra, margemOriginal.Bottom);
+                await Task.Delay(atrasoPorPasso);
+            }
+
+            button.Margin = margemOriginal;
         }
 
         private async void frmMain_Load(object sender, EventArgs e)
@@ -60,25 +87,27 @@ namespace MatchingGame
         {
             Button button = (Button)sender;
             button.Enabled = false;
+            this.ActiveControl = null;
+            tableLayoutPanel1.Enabled = false;
+            newGameToolStripMenuItem.Enabled = false;
+            usarDicaToolStripMenuItem.Enabled = false;
 
             int buttonNo = int.Parse(button.Name.Substring(6));
             int posicao = buttonNo - 1;
 
             ResultadoJogada resultado = jogo.SelecionarCarta(posicao);
 
-            button.BackgroundImage = jogo.Baralho.Cartas[posicao].Imagem;
-            button.Refresh();
+            await AnimarVirada(button, jogo.Baralho.Cartas[posicao].Imagem);
 
             if (resultado == ResultadoJogada.NenhumaCartaSelecionada)
             {
+                tableLayoutPanel1.Enabled = true;
+                newGameToolStripMenuItem.Enabled = true;
+                AtualizarMenuDica();
                 return;
             }
 
             Button primeiraCarta = botoesPorPosicao[jogo.UltimaPosicaoPrimeiraCarta]!;
-
-            tableLayoutPanel1.Enabled = false;
-            newGameToolStripMenuItem.Enabled = false;
-            usarDicaToolStripMenuItem.Enabled = false;
 
             await Task.Delay(1000);
 
@@ -87,8 +116,7 @@ namespace MatchingGame
                 jogo.EsconderUltimaJogadaSemPar();
             }
 
-            primeiraCarta.BackgroundImage = null;
-            button.BackgroundImage = null;
+            await Task.WhenAll(AnimarVirada(primeiraCarta, null), AnimarVirada(button, null));
 
             if (resultado == ResultadoJogada.ParEncontrado || resultado == ResultadoJogada.NivelConcluido || resultado == ResultadoJogada.JogoFinalizado)
             {
