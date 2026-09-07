@@ -33,6 +33,8 @@ namespace MatchingGame
 
         public List<Carta> Cartas { get; private set; } = new List<Carta>();
 
+        public int TotalDePares => pokemon.Length;
+
         public Baralho()
         {
             Reiniciar();
@@ -40,7 +42,7 @@ namespace MatchingGame
 
         public void Reiniciar()
         {
-            Cartas = new List<Carta>(42);
+            Cartas = new List<Carta>(pokemon.Length * 2);
             for (int id = 0; id < pokemon.Length; id++)
             {
                 Cartas.Add(new Carta(id, pokemon[id]));
@@ -54,9 +56,9 @@ namespace MatchingGame
         {
             Random rnd = new Random();
 
-            for (int i = 0; i < 42; i++)
+            for (int i = 0; i < pokemon.Length * 2; i++)
             {
-                int number = rnd.Next(0, 21);
+                int number = rnd.Next(0, pokemon.Length);
                 Carta temp = Cartas[i];
                 Cartas[i] = Cartas[number];
                 Cartas[number] = temp;

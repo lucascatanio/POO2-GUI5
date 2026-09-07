@@ -4,11 +4,22 @@ namespace MatchingGame
     {
         private readonly Jogo jogo = new Jogo();
 
-        private Button? primeiraCarta;
+        private readonly Button?[] botoesPorPosicao = new Button?[42];
 
         public frmMain()
         {
             InitializeComponent();
+            MapearBotoes();
+        }
+
+        private void MapearBotoes()
+        {
+            for (var i = 0; i < tableLayoutPanel1.Controls.Count; i++)
+            {
+                var button = (Button)tableLayoutPanel1.Controls[i];
+                int posicao = int.Parse(button.Name.Substring(6)) - 1;
+                botoesPorPosicao[posicao] = button;
+            }
         }
 
         private void frmMain_Load(object sender, EventArgs e)
@@ -25,13 +36,13 @@ namespace MatchingGame
             jogo.IniciarNovoJogo();
             IniciarTimerDeUI();
             AtualizarMenuDica();
-            primeiraCarta = null;
 
             tableLayoutPanel1.Enabled = true;
             for (var i = 0; i < tableLayoutPanel1.Controls.Count; i++)
             {
                 var button = (Button)tableLayoutPanel1.Controls[i];
                 button.Visible = true;
+                button.Enabled = true;
             }
 
             MostrarPreviaInicial();
@@ -63,9 +74,10 @@ namespace MatchingGame
 
             if (resultado == ResultadoJogada.NenhumaCartaSelecionada)
             {
-                primeiraCarta = button;
                 return;
             }
+
+            Button primeiraCarta = botoesPorPosicao[jogo.UltimaPosicaoPrimeiraCarta]!;
 
             System.Threading.Thread.Sleep(1000);
 
@@ -74,12 +86,12 @@ namespace MatchingGame
                 jogo.EsconderUltimaJogadaSemPar();
             }
 
-            primeiraCarta!.BackgroundImage = null;
+            primeiraCarta.BackgroundImage = null;
             button.BackgroundImage = null;
 
             if (resultado == ResultadoJogada.ParEncontrado || resultado == ResultadoJogada.JogoFinalizado)
             {
-                primeiraCarta!.Visible = false;
+                primeiraCarta.Visible = false;
                 button.Visible = false;
 
                 if (resultado == ResultadoJogada.JogoFinalizado)
@@ -92,8 +104,7 @@ namespace MatchingGame
             }
 
             button.Enabled = true;
-            primeiraCarta!.Enabled = true;
-            primeiraCarta = null;
+            primeiraCarta.Enabled = true;
         }
 
         private void IniciarTimerDeUI()

@@ -10,12 +10,12 @@ namespace MatchingGame
 
     public class Jogo
     {
-        private const int TotalDePares = 21;
-
         private int primeiraPosicao = -1;
 
         private int ultimaPosicaoSemParA = -1;
         private int ultimaPosicaoSemParB = -1;
+
+        public int UltimaPosicaoPrimeiraCarta { get; private set; } = -1;
 
         public Baralho Baralho { get; } = new Baralho();
 
@@ -99,6 +99,7 @@ namespace MatchingGame
 
             Carta primeira = Baralho.Cartas[primeiraPosicao];
             int posicaoPrimeira = primeiraPosicao;
+            UltimaPosicaoPrimeiraCarta = posicaoPrimeira;
             primeiraPosicao = -1;
 
             if (primeira.PokemonId == carta.PokemonId)
@@ -107,7 +108,7 @@ namespace MatchingGame
                 carta.Combinar();
                 ParesEncontrados++;
 
-                if (ParesEncontrados == TotalDePares)
+                if (ParesEncontrados == Baralho.TotalDePares)
                 {
                     CronometroNivel.Pausar();
                     CronometroTotal.Pausar();
