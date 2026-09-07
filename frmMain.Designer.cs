@@ -26,8 +26,14 @@
             //this.ClientSize = new System.Drawing.Size(800, 450);
             //this.Text = "Form1";
 
+            this.components = new System.ComponentModel.Container();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.newGameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.painelStatus = new System.Windows.Forms.FlowLayoutPanel();
+            this.lblTempoTotal = new System.Windows.Forms.Label();
+            this.lblTempoNivel = new System.Windows.Forms.Label();
+            this.lblTentativas = new System.Windows.Forms.Label();
+            this.uiTimer = new System.Windows.Forms.Timer(this.components);
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.button42 = new System.Windows.Forms.Button();
             this.button41 = new System.Windows.Forms.Button();
@@ -72,6 +78,7 @@
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
+            this.painelStatus.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -91,9 +98,57 @@
             this.newGameToolStripMenuItem.Size = new System.Drawing.Size(73, 20);
             this.newGameToolStripMenuItem.Text = "Novo Jogo";
             this.newGameToolStripMenuItem.Click += new System.EventHandler(this.newGameToolStripMenuItem_Click);
-            // 
+            //
+            // painelStatus
+            //
+            this.painelStatus.AutoSize = true;
+            this.painelStatus.Controls.Add(this.lblTempoTotal);
+            this.painelStatus.Controls.Add(this.lblTempoNivel);
+            this.painelStatus.Controls.Add(this.lblTentativas);
+            this.painelStatus.Dock = System.Windows.Forms.DockStyle.Top;
+            this.painelStatus.Location = new System.Drawing.Point(0, 24);
+            this.painelStatus.Name = "painelStatus";
+            this.painelStatus.Padding = new System.Windows.Forms.Padding(6, 4, 6, 4);
+            this.painelStatus.Size = new System.Drawing.Size(824, 27);
+            this.painelStatus.TabIndex = 3;
+            //
+            // lblTempoTotal
+            //
+            this.lblTempoTotal.AutoSize = true;
+            this.lblTempoTotal.Location = new System.Drawing.Point(9, 4);
+            this.lblTempoTotal.Margin = new System.Windows.Forms.Padding(3, 4, 12, 0);
+            this.lblTempoTotal.Name = "lblTempoTotal";
+            this.lblTempoTotal.Size = new System.Drawing.Size(96, 15);
+            this.lblTempoTotal.TabIndex = 0;
+            this.lblTempoTotal.Text = "Tempo total: 00:00";
+            //
+            // lblTempoNivel
+            //
+            this.lblTempoNivel.AutoSize = true;
+            this.lblTempoNivel.Location = new System.Drawing.Point(120, 4);
+            this.lblTempoNivel.Margin = new System.Windows.Forms.Padding(3, 4, 12, 0);
+            this.lblTempoNivel.Name = "lblTempoNivel";
+            this.lblTempoNivel.Size = new System.Drawing.Size(102, 15);
+            this.lblTempoNivel.TabIndex = 1;
+            this.lblTempoNivel.Text = "Tempo do nível: 00:00";
+            //
+            // lblTentativas
+            //
+            this.lblTentativas.AutoSize = true;
+            this.lblTentativas.Location = new System.Drawing.Point(237, 4);
+            this.lblTentativas.Margin = new System.Windows.Forms.Padding(3, 4, 12, 0);
+            this.lblTentativas.Name = "lblTentativas";
+            this.lblTentativas.Size = new System.Drawing.Size(78, 15);
+            this.lblTentativas.TabIndex = 2;
+            this.lblTentativas.Text = "Tentativas: 0";
+            //
+            // uiTimer
+            //
+            this.uiTimer.Interval = 1000;
+            this.uiTimer.Tick += new System.EventHandler(this.uiTimer_Tick);
+            //
             // tableLayoutPanel1
-            // 
+            //
             this.tableLayoutPanel1.ColumnCount = 7;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.28571F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.28571F));
@@ -709,6 +764,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(824, 622);
             this.Controls.Add(this.tableLayoutPanel1);
+            this.Controls.Add(this.painelStatus);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "frmMain";
@@ -718,6 +774,8 @@
             this.Load += new System.EventHandler(this.frmMain_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.painelStatus.ResumeLayout(false);
+            this.painelStatus.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -728,6 +786,11 @@
 
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem newGameToolStripMenuItem;
+        private System.Windows.Forms.FlowLayoutPanel painelStatus;
+        private System.Windows.Forms.Label lblTempoTotal;
+        private System.Windows.Forms.Label lblTempoNivel;
+        private System.Windows.Forms.Label lblTentativas;
+        private System.Windows.Forms.Timer uiTimer;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Button button42;
         private System.Windows.Forms.Button button41;

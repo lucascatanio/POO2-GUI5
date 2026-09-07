@@ -16,6 +16,10 @@ namespace MatchingGame
 
         public Baralho Baralho { get; } = new Baralho();
 
+        public Cronometro CronometroTotal { get; } = new Cronometro();
+
+        public Cronometro CronometroNivel { get; } = new Cronometro();
+
         public int Tentativas { get; private set; }
 
         public int ParesEncontrados { get; private set; }
@@ -26,6 +30,19 @@ namespace MatchingGame
             Tentativas = 0;
             ParesEncontrados = 0;
             primeiraPosicao = -1;
+
+            CronometroTotal.Reiniciar();
+            CronometroTotal.Iniciar();
+
+            IniciarNovoNivel();
+        }
+
+        // Preparado para o sistema de níveis (fase futura): o cronômetro do nível
+        // pode ser reiniciado de forma independente do cronômetro total.
+        public void IniciarNovoNivel()
+        {
+            CronometroNivel.Reiniciar();
+            CronometroNivel.Iniciar();
         }
 
         public ResultadoJogada SelecionarCarta(int posicao)
@@ -49,9 +66,14 @@ namespace MatchingGame
                 carta.Combinar();
                 ParesEncontrados++;
 
-                return ParesEncontrados == TotalDePares
-                    ? ResultadoJogada.JogoFinalizado
-                    : ResultadoJogada.ParEncontrado;
+                if (ParesEncontrados == TotalDePares)
+                {
+                    CronometroNivel.Pausar();
+                    CronometroTotal.Pausar();
+                    return ResultadoJogada.JogoFinalizado;
+                }
+
+                return ResultadoJogada.ParEncontrado;
             }
 
             primeira.Virar();

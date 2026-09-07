@@ -14,11 +14,13 @@ namespace MatchingGame
         private void frmMain_Load(object sender, EventArgs e)
         {
             jogo.IniciarNovoJogo();
+            IniciarTimerDeUI();
         }
 
         private void newGameToolStripMenuItem_Click(object sender, EventArgs e)
         {
             jogo.IniciarNovoJogo();
+            IniciarTimerDeUI();
             primeiraCarta = null;
 
             tableLayoutPanel1.Enabled = true;
@@ -59,6 +61,8 @@ namespace MatchingGame
 
                 if (resultado == ResultadoJogada.JogoFinalizado)
                 {
+                    uiTimer.Stop();
+                    AtualizarStatus();
                     MessageBox.Show("Parabéns! " + jogo.Tentativas + " Você terminou a parada...");
                     tableLayoutPanel1.Enabled = false;
                 }
@@ -67,6 +71,30 @@ namespace MatchingGame
             button.Enabled = true;
             primeiraCarta!.Enabled = true;
             primeiraCarta = null;
+        }
+
+        private void IniciarTimerDeUI()
+        {
+            uiTimer.Stop();
+            AtualizarStatus();
+            uiTimer.Start();
+        }
+
+        private void uiTimer_Tick(object sender, EventArgs e)
+        {
+            AtualizarStatus();
+        }
+
+        private void AtualizarStatus()
+        {
+            lblTempoTotal.Text = "Tempo total: " + FormatarTempo(jogo.CronometroTotal.TempoDecorrido);
+            lblTempoNivel.Text = "Tempo do nível: " + FormatarTempo(jogo.CronometroNivel.TempoDecorrido);
+            lblTentativas.Text = "Tentativas: " + jogo.Tentativas;
+        }
+
+        private static string FormatarTempo(TimeSpan tempo)
+        {
+            return ((int)tempo.TotalMinutes).ToString("00") + ":" + tempo.Seconds.ToString("00");
         }
     }
 }
