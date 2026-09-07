@@ -22,16 +22,16 @@ namespace MatchingGame
             }
         }
 
-        private void frmMain_Load(object sender, EventArgs e)
+        private async void frmMain_Load(object sender, EventArgs e)
         {
             jogo.IniciarNovoJogo();
             IniciarTimerDeUI();
             AtualizarMenuDica();
 
-            MostrarPreviaInicial();
+            await MostrarPreviaInicial();
         }
 
-        private void newGameToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void newGameToolStripMenuItem_Click(object sender, EventArgs e)
         {
             jogo.IniciarNovoJogo();
             IniciarTimerDeUI();
@@ -45,21 +45,21 @@ namespace MatchingGame
                 button.Enabled = true;
             }
 
-            MostrarPreviaInicial();
+            await MostrarPreviaInicial();
         }
 
-        private void usarDicaToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void usarDicaToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (!jogo.TentarUsarDica())
             {
                 return;
             }
 
-            RevelarCartasTemporariamente();
+            await RevelarCartasTemporariamente();
             AtualizarMenuDica();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private async void button1_Click(object sender, EventArgs e)
         {
             Button button = (Button)sender;
             button.Enabled = false;
@@ -79,7 +79,11 @@ namespace MatchingGame
 
             Button primeiraCarta = botoesPorPosicao[jogo.UltimaPosicaoPrimeiraCarta]!;
 
-            System.Threading.Thread.Sleep(1000);
+            tableLayoutPanel1.Enabled = false;
+            newGameToolStripMenuItem.Enabled = false;
+            usarDicaToolStripMenuItem.Enabled = false;
+
+            await Task.Delay(1000);
 
             if (resultado == ResultadoJogada.ParNaoEncontrado)
             {
@@ -105,6 +109,14 @@ namespace MatchingGame
 
             button.Enabled = true;
             primeiraCarta.Enabled = true;
+
+            newGameToolStripMenuItem.Enabled = true;
+            AtualizarMenuDica();
+
+            if (resultado != ResultadoJogada.JogoFinalizado)
+            {
+                tableLayoutPanel1.Enabled = true;
+            }
         }
 
         private void IniciarTimerDeUI()
@@ -143,25 +155,29 @@ namespace MatchingGame
             }
         }
 
-        private void MostrarPreviaInicial()
+        private async Task MostrarPreviaInicial()
         {
-            RevelarCartasTemporariamente();
+            await RevelarCartasTemporariamente();
         }
 
-        private void RevelarCartasTemporariamente()
+        private async Task RevelarCartasTemporariamente()
         {
             tableLayoutPanel1.Enabled = false;
+            newGameToolStripMenuItem.Enabled = false;
+            usarDicaToolStripMenuItem.Enabled = false;
 
             jogo.RevelarTodas();
             RedesenharTabuleiro();
             Refresh();
 
-            System.Threading.Thread.Sleep(3000);
+            await Task.Delay(3000);
 
             jogo.EsconderTodas();
             RedesenharTabuleiro();
 
             tableLayoutPanel1.Enabled = true;
+            newGameToolStripMenuItem.Enabled = true;
+            AtualizarMenuDica();
         }
 
         private static string FormatarTempo(TimeSpan tempo)
