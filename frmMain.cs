@@ -28,6 +28,8 @@ namespace MatchingGame
             IniciarTimerDeUI();
             AtualizarMenuDica();
 
+            ConfigurarTabuleiroParaNivel();
+
             await MostrarPreviaInicial();
         }
 
@@ -38,12 +40,7 @@ namespace MatchingGame
             AtualizarMenuDica();
 
             tableLayoutPanel1.Enabled = true;
-            for (var i = 0; i < tableLayoutPanel1.Controls.Count; i++)
-            {
-                var button = (Button)tableLayoutPanel1.Controls[i];
-                button.Visible = true;
-                button.Enabled = true;
-            }
+            ConfigurarTabuleiroParaNivel();
 
             await MostrarPreviaInicial();
         }
@@ -93,12 +90,19 @@ namespace MatchingGame
             primeiraCarta.BackgroundImage = null;
             button.BackgroundImage = null;
 
-            if (resultado == ResultadoJogada.ParEncontrado || resultado == ResultadoJogada.JogoFinalizado)
+            if (resultado == ResultadoJogada.ParEncontrado || resultado == ResultadoJogada.NivelConcluido || resultado == ResultadoJogada.JogoFinalizado)
             {
                 primeiraCarta.Visible = false;
                 button.Visible = false;
 
-                if (resultado == ResultadoJogada.JogoFinalizado)
+                if (resultado == ResultadoJogada.NivelConcluido)
+                {
+                    jogo.AvancarNivel();
+                    ConfigurarTabuleiroParaNivel();
+                    AtualizarStatus();
+                    await MostrarPreviaInicial();
+                }
+                else if (resultado == ResultadoJogada.JogoFinalizado)
                 {
                     uiTimer.Stop();
                     AtualizarStatus();
@@ -136,6 +140,30 @@ namespace MatchingGame
             lblTempoTotal.Text = "Tempo total: " + FormatarTempo(jogo.CronometroTotal.TempoDecorrido);
             lblTempoNivel.Text = "Tempo do nível: " + FormatarTempo(jogo.CronometroNivel.TempoDecorrido);
             lblTentativas.Text = "Tentativas: " + jogo.Tentativas;
+            lblNivel.Text = "Nível: " + jogo.Nivel.NumeroAtual + "/" + jogo.Nivel.TotalNiveis;
+        }
+
+        private void ConfigurarTabuleiroParaNivel()
+        {
+            for (int posicao = 0; posicao < botoesPorPosicao.Length; posicao++)
+            {
+                Button? button = botoesPorPosicao[posicao];
+                if (button == null)
+                {
+                    continue;
+                }
+
+                if (posicao < jogo.Baralho.Cartas.Count)
+                {
+                    button.Visible = true;
+                    button.Enabled = true;
+                    button.BackgroundImage = null;
+                }
+                else
+                {
+                    button.Visible = false;
+                }
+            }
         }
 
         private void AtualizarMenuDica()
@@ -150,6 +178,11 @@ namespace MatchingGame
             {
                 var button = (Button)tableLayoutPanel1.Controls[i];
                 int posicao = int.Parse(button.Name.Substring(6)) - 1;
+                if (posicao >= jogo.Baralho.Cartas.Count)
+                {
+                    continue;
+                }
+
                 Carta carta = jogo.Baralho.Cartas[posicao];
                 button.BackgroundImage = carta.EstaVirada ? carta.Imagem : null;
             }

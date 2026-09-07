@@ -35,6 +35,8 @@ namespace MatchingGame
 
         public int TotalDePares => pokemon.Length;
 
+        public int ParesEmJogo => Cartas.Count / 2;
+
         public Baralho()
         {
             Reiniciar();
@@ -42,9 +44,32 @@ namespace MatchingGame
 
         public void Reiniciar()
         {
-            Cartas = new List<Carta>(pokemon.Length * 2);
-            for (int id = 0; id < pokemon.Length; id++)
+            Reiniciar(pokemon.Length);
+        }
+
+        public void Reiniciar(int totalPares)
+        {
+            totalPares = Math.Clamp(totalPares, 1, pokemon.Length);
+
+            int[] indices = new int[pokemon.Length];
+            for (int i = 0; i < indices.Length; i++)
             {
+                indices[i] = i;
+            }
+
+            Random rnd = new Random();
+            for (int i = indices.Length - 1; i > 0; i--)
+            {
+                int j = rnd.Next(0, i + 1);
+                int temp = indices[i];
+                indices[i] = indices[j];
+                indices[j] = temp;
+            }
+
+            Cartas = new List<Carta>(totalPares * 2);
+            for (int i = 0; i < totalPares; i++)
+            {
+                int id = indices[i];
                 Cartas.Add(new Carta(id, pokemon[id]));
                 Cartas.Add(new Carta(id, pokemon[id]));
             }
@@ -56,9 +81,10 @@ namespace MatchingGame
         {
             Random rnd = new Random();
 
-            for (int i = 0; i < pokemon.Length * 2; i++)
+            int metade = Cartas.Count / 2;
+            for (int i = 0; i < Cartas.Count; i++)
             {
-                int number = rnd.Next(0, pokemon.Length);
+                int number = rnd.Next(0, metade);
                 Carta temp = Cartas[i];
                 Cartas[i] = Cartas[number];
                 Cartas[number] = temp;

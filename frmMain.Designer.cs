@@ -34,6 +34,7 @@
             this.lblTempoTotal = new System.Windows.Forms.Label();
             this.lblTempoNivel = new System.Windows.Forms.Label();
             this.lblTentativas = new System.Windows.Forms.Label();
+            this.lblNivel = new System.Windows.Forms.Label();
             this.uiTimer = new System.Windows.Forms.Timer(this.components);
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.button42 = new System.Windows.Forms.Button();
@@ -114,6 +115,7 @@
             this.painelStatus.Controls.Add(this.lblTempoTotal);
             this.painelStatus.Controls.Add(this.lblTempoNivel);
             this.painelStatus.Controls.Add(this.lblTentativas);
+            this.painelStatus.Controls.Add(this.lblNivel);
             this.painelStatus.Dock = System.Windows.Forms.DockStyle.Top;
             this.painelStatus.Location = new System.Drawing.Point(0, 24);
             this.painelStatus.Name = "painelStatus";
@@ -150,6 +152,16 @@
             this.lblTentativas.Size = new System.Drawing.Size(78, 15);
             this.lblTentativas.TabIndex = 2;
             this.lblTentativas.Text = "Tentativas: 0";
+            //
+            // lblNivel
+            //
+            this.lblNivel.AutoSize = true;
+            this.lblNivel.Location = new System.Drawing.Point(330, 4);
+            this.lblNivel.Margin = new System.Windows.Forms.Padding(3, 4, 12, 0);
+            this.lblNivel.Name = "lblNivel";
+            this.lblNivel.Size = new System.Drawing.Size(66, 15);
+            this.lblNivel.TabIndex = 3;
+            this.lblNivel.Text = "Nível: 1/11";
             //
             // uiTimer
             //
@@ -800,6 +812,7 @@
         private System.Windows.Forms.Label lblTempoTotal;
         private System.Windows.Forms.Label lblTempoNivel;
         private System.Windows.Forms.Label lblTentativas;
+        private System.Windows.Forms.Label lblNivel;
         private System.Windows.Forms.Timer uiTimer;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Button button42;

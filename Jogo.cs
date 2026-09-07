@@ -5,6 +5,7 @@ namespace MatchingGame
         NenhumaCartaSelecionada,
         ParEncontrado,
         ParNaoEncontrado,
+        NivelConcluido,
         JogoFinalizado
     }
 
@@ -18,6 +19,8 @@ namespace MatchingGame
         public int UltimaPosicaoPrimeiraCarta { get; private set; } = -1;
 
         public Baralho Baralho { get; } = new Baralho();
+
+        public Nivel Nivel { get; } = new Nivel();
 
         public Cronometro CronometroTotal { get; } = new Cronometro();
 
@@ -39,17 +42,30 @@ namespace MatchingGame
             CronometroTotal.Reiniciar();
             CronometroTotal.Iniciar();
 
+            Nivel.Reiniciar();
             IniciarNovoNivel();
         }
 
-        // Preparado para o sistema de níveis (fase futura): o cronômetro do nível
-        // pode ser reiniciado de forma independente do cronômetro total.
         public void IniciarNovoNivel()
         {
+            Baralho.Reiniciar(Nivel.ParesDoNivelAtual);
+
+            ParesEncontrados = 0;
+            primeiraPosicao = -1;
+            ultimaPosicaoSemParA = -1;
+            ultimaPosicaoSemParB = -1;
+            UltimaPosicaoPrimeiraCarta = -1;
+
             CronometroNivel.Reiniciar();
             CronometroNivel.Iniciar();
 
             DicasRestantesNoNivel = 1;
+        }
+
+        public void AvancarNivel()
+        {
+            Nivel.AvancarNivel();
+            IniciarNovoNivel();
         }
 
         public bool TentarUsarDica()
@@ -108,11 +124,16 @@ namespace MatchingGame
                 carta.Combinar();
                 ParesEncontrados++;
 
-                if (ParesEncontrados == Baralho.TotalDePares)
+                if (ParesEncontrados == Baralho.ParesEmJogo)
                 {
                     CronometroNivel.Pausar();
-                    CronometroTotal.Pausar();
-                    return ResultadoJogada.JogoFinalizado;
+                    if (Nivel.EhUltimoNivel)
+                    {
+                        CronometroTotal.Pausar();
+                        return ResultadoJogada.JogoFinalizado;
+                    }
+
+                    return ResultadoJogada.NivelConcluido;
                 }
 
                 return ResultadoJogada.ParEncontrado;
